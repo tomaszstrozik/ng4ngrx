@@ -1,0 +1,20 @@
+<mat-list-item class="tasks-list-item">
+  <h4 [style.display]="isEdited ? 'none' : 'initial'" mat-line>{{ task.name }}</h4>
+  <div mat-line>
+      <mat-form-field *ngIf="isEdited">
+          <input name="name" [value]="task.name" (keyup)="editKeyup$.next($event.target.value)" matInput placeholder="Task name">
+        </mat-form-field>
+  </div>
+  <p mat-line>{{ task.startedAt | date:'medium' }}</p>
+  <p mat-line>{{ task.endedAt | date:'medium' }}</p>
+  <p mat-line>{{ task.duration | duration }}</p>
+  <mat-icon mat-list-icon>description</mat-icon>
+  <div class="btn-list">
+    <button type="button" mat-raised-button color="accent" (click)="save()" [style.display]="isEdited ? 'initial' : 'none'"><mat-icon mat-icon>save</mat-icon>Save</button>
+    <button type="button" mat-raised-button color="primary" (click)="toggleEdit()">
+      <mat-icon mat-icon>{{ getIcon() }}</mat-icon>
+      {{ getBtnText() }}
+    </button>
+    <button type="button" mat-raised-button (click)="remove()" [disabled]="isEdited"><mat-icon mat-icon>delete</mat-icon>Remove</button>
+  </div>
+</mat-list-item>

@@ -1,0 +1,18 @@
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form > * {
+    width: 100%;
+}
+
+.form textarea {
+    height: 5em;
+}
+
+.divider {
+    margin: 1em 0;
+    height: 1px;
+    border-top: 1px solid #dcdcdc;
+}

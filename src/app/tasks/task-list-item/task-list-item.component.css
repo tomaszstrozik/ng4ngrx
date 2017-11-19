@@ -1,0 +1,11 @@
+.btn-list {
+    display: flex;
+}
+
+.btn-list button {
+    margin-left: 1em;
+}
+
+.btn-list button:first-child {
+    margin-left: 0;
+}

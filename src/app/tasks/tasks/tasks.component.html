@@ -1,0 +1,16 @@
+<mat-card>
+    <mat-list>
+        <h3 mat-subheader>Tasks</h3>
+            <app-task-list-item
+                *ngFor="let task of tasks" 
+                [task]="task"
+                [editedId]="editedId"
+                (setEditMode)="setEditMode($event)"
+                (removeEditMode)="removeEditMode($event)"
+                (editItem)="editItem($event)"
+                (removeItem)="removeItem($event)"></app-task-list-item>
+            <mat-list-item *ngIf="!tasks.length">
+                <p mat-line>Empty...</p>
+            </mat-list-item>    
+    </mat-list>
+</mat-card>

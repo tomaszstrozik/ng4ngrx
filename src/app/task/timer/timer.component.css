@@ -1,0 +1,8 @@
+.timer {
+    display: inline-block;
+    margin-right: 1em;
+}
+
+.value {
+    font-size: 2.5em;
+}

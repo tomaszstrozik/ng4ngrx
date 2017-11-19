@@ -1,0 +1,22 @@
+<mat-card>
+  <mat-card-content>
+    <form #form="ngForm" class="form" novalidate>
+      <mat-form-field>
+        <input name="name" (keyup)="nameFieldSubject$.next($event.target.value)" [value]="task.name" matInput placeholder="What are you working on?" required>
+      </mat-form-field>
+
+      <mat-form-field>
+        <textarea name="notes" (keyup)="notesFieldSubject$.next($event.target.value)" [value]="task.notes" matInput placeholder="Your notes"></textarea>
+      </mat-form-field>
+      <app-timer
+        [duration]="this.task.duration"
+        [isTicking]="this.task.isTicking"
+        (toggleTimer)="toggleTimer($event)"></app-timer>
+      <div class="divider"></div>
+      <div class="button-row">
+          <button type="button" mat-raised-button color="accent" [disabled]="!canSave()" (click)="save(form)">Save</button>          
+          <button type="button" mat-button (click)="reset(form)">Cancel</button>
+      </div>        
+    </form>
+  </mat-card-content>	
+</mat-card>
