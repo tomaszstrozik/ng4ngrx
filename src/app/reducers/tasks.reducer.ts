@@ -1,12 +1,12 @@
 import { Task } from '../models/Task';
 
 export interface TasksState {
-    editedId: string;
+    edits: Object;
     list: Task[];
 }
 
 const initialState: TasksState = {
-    editedId: null,
+    edits: {},
     list: []
 };
 
@@ -14,8 +14,10 @@ export const actions = {
     ADD_TASK: 'ADD_TASK',
     REMOVE_TASK: 'REMOVE_TASK',
     EDIT_TASK: 'EDIT_TASK',
-    SET_EDIT_MODE: 'SET_EDIT_MODE',
-    REMOVE_EDIT_MODE: 'REMOVE_EDIT_MODE'
+    ADD_TO_EDITS: 'ADD_TO_EDITS',
+    REMOVE_FROM_EDITS: 'REMOVE_FROM_EDITS',
+    SAVE_EDITS: 'SAVE_EDITS',
+    CLEAR_EDITS: 'CLEAR_EDITS'
 };
 
 export const tasksReducer = (state: TasksState = initialState, action: any): TasksState => {
@@ -39,10 +41,24 @@ export const tasksReducer = (state: TasksState = initialState, action: any): Tas
                     return task;
                 })
             });
-        case actions.SET_EDIT_MODE:
-            return { ...state, editedId: action.payload };
-        case actions.REMOVE_EDIT_MODE:
-            return { ...state, editedId: null };
+        case actions.ADD_TO_EDITS:
+            return { ...state, edits: { ...state.edits, [action.payload.id]: action.payload } };
+        case actions.REMOVE_FROM_EDITS:
+            let { [action.payload]: omit, ...res} = state.edits;
+            if (!res) {
+                res = {};
+            }
+            return { ...state, edits: res };
+        case actions.SAVE_EDITS:
+            return { ...state, list: state.list.map(task => {
+                const editedTask = action.payload[task.id];
+                if (editedTask) {
+                    return editedTask;
+                }
+                return task;
+            })};
+        case actions.CLEAR_EDITS:
+            return { ...state, edits: {} };
         default:
             return state;
     }

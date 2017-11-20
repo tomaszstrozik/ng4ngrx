@@ -15,7 +15,8 @@ import { actions } from '../../reducers/tasks.reducer';
 })
 export class TasksComponent implements OnInit, OnDestroy {
 
-  editedId: string;
+  isGroupBtnActive: boolean;
+  edits: Object;
   tasks: Task[];
   tasksState$: Observable<TasksState>;
   tasksSubscription: Subscription;
@@ -26,31 +27,42 @@ export class TasksComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.tasksSubscription = this.tasksState$.subscribe(tasksState => {
+      const edits = tasksState.edits;
       this.tasks = tasksState.list;
-      this.editedId = tasksState.editedId;
+      this.edits = edits;
+      this.isGroupBtnActive = !!Object.keys(edits).length;
     });
   }
 
   ngOnDestroy() {
     this.tasksSubscription.unsubscribe();
-    this.removeEditMode();
+    this.clearEdits();
   }
 
-  setEditMode (id: string) {
-    this.store.dispatch({ type: actions.SET_EDIT_MODE, payload: id });
+  addToEdits (task: Task) {
+    this.store.dispatch({ type: actions.ADD_TO_EDITS, payload: task });
   }
 
-  removeEditMode () {
-    this.store.dispatch({ type: actions.REMOVE_EDIT_MODE });
+  removeFromEdits (id) {
+    this.store.dispatch({ type: actions.REMOVE_FROM_EDITS, payload: id });
   }
 
   editItem (task: Task) {
     this.taskService.edit(task);
-    this.removeEditMode();
+    this.removeFromEdits(task.id);
   }
 
   removeItem (task: Task) {
     this.taskService.remove(task);
+  }
+
+  saveEdits () {
+    this.taskService.saveEdits(this.edits);
+    this.clearEdits();
+  }
+
+  clearEdits () {
+    this.store.dispatch({ type: actions.CLEAR_EDITS });
   }
 
 }

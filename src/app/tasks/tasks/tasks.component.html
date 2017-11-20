@@ -4,13 +4,22 @@
             <app-task-list-item
                 *ngFor="let task of tasks" 
                 [task]="task"
-                [editedId]="editedId"
-                (setEditMode)="setEditMode($event)"
-                (removeEditMode)="removeEditMode($event)"
+                [edits]="edits"
+                (addToEdits)="addToEdits($event)"
+                (removeFromEdits)="removeFromEdits($event)"
                 (editItem)="editItem($event)"
-                (removeItem)="removeItem($event)"></app-task-list-item>
-            <mat-list-item *ngIf="!tasks.length">
+                (removeItem)="removeItem($event)"></app-task-list-item>   
+            <mat-list-item *ngIf="!tasks.length; else elseTemplate">
                 <p mat-line>Empty...</p>
-            </mat-list-item>    
+            </mat-list-item>
+            <ng-template #elseTemplate>
+                <mat-divider></mat-divider>
+                <mat-list-item>
+                    <div class="btn-list">
+                        <button type="button" mat-button color="accent" (click)="saveEdits()" [disabled]="!isGroupBtnActive">Save edits</button>
+                        <button type="button" mat-button (click)="clearEdits()" [disabled]="!isGroupBtnActive">Cancel</button>
+                    </div>
+                </mat-list-item>
+            </ng-template>
     </mat-list>
 </mat-card>

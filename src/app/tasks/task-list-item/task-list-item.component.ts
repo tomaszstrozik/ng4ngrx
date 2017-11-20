@@ -18,19 +18,22 @@ export class TaskListItemComponent implements OnChanges, OnInit {
   isEdited: boolean;
   editKeyup$ = new Subject<string>();
   editKeyupSubscription: Subscription;
-  @Input() editedId: string;
+  @Input() edits: Object;
   @Input() task: Task;
   @Output() removeItem = new EventEmitter<Task>();
   @Output() editItem = new EventEmitter<Task>();
-  @Output() setEditMode = new EventEmitter<string>();
-  @Output() removeEditMode = new EventEmitter();
+  @Output() addToEdits = new EventEmitter<Task>();
+  @Output() removeFromEdits = new EventEmitter<string>();
 
   constructor() { }
 
   ngOnInit() {
     this.editKeyupSubscription = this.editKeyup$
-      .debounceTime(200)
-      .do(value => { this.tempName = value; })
+      .debounceTime(300)
+      .do(value => {
+        this.tempName = value;
+        this.addToEdits.emit({ ...this.task, name: this.tempName });
+      })
       .subscribe();
   }
 
@@ -66,14 +69,14 @@ export class TaskListItemComponent implements OnChanges, OnInit {
   }
 
   checkIfEdited () {
-     this.isEdited = this.task.id === this.editedId;
+     this.isEdited = !!this.edits[this.task.id];
   }
 
   toggleEdit () {
     if (!this.isEdited) {
-      this.setEditMode.emit(this.task.id);
+      this.addToEdits.emit(this.task);
     } else {
-      this.removeEditMode.emit();
+      this.removeFromEdits.emit(this.task.id);
     }
   }
 

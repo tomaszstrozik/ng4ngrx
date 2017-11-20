@@ -13,21 +13,23 @@ export class TasksService {
 
   constructor(private store: Store<TasksState>, private snackBar: MatSnackBar) { }
 
-  createMsg (msgType: string, taskName: string): string {
+  createMsg (msgType: string, text: string): string {
     switch (msgType) {
       case actions.ADD_TASK:
-        return `Added "${taskName}" task!`;
+        return `Added "${text}" task!`;
       case actions.EDIT_TASK:
-        return `Edited "${taskName}" task!`;
+        return `Edited "${text}" task!`;
       case actions.REMOVE_TASK:
-        return `Removed "${taskName}" task!`;
+        return `Removed "${text}" task!`;
+      case actions.SAVE_EDITS:
+        return `Saved ${text} tasks!`;
       default:
         return '';
     }
   }
 
-  showMsg (actionType: string, taskName: string) {
-    const msg = this.createMsg(actionType, taskName);
+  showMsg (actionType: string, text: string) {
+    const msg = this.createMsg(actionType, text);
 
     this.snackBar.open(msg, 'Close', {
       duration: this.snackbarDuration
@@ -56,5 +58,13 @@ export class TasksService {
 
     this.store.dispatch({ type: actionType, payload: task.id });
     this.showMsg(actionType, name);
+  }
+
+  saveEdits (edits: Object) {
+    const actionType = actions.SAVE_EDITS,
+          editsCount = Object.keys(edits).length.toString();
+
+    this.store.dispatch({ type: actionType, payload: edits });
+    this.showMsg(actionType, editsCount);
   }
 }
